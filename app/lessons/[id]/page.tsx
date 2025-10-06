@@ -266,7 +266,7 @@ export default function LessonDetailPage({ params }: { params: Promise<{ id: str
         <div className="bg-white rounded-xl p-6 mb-8 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Caracteres</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {lesson.content.characters.map((item: Lesson) => (
+            {lesson.content.characters.map((item: Character) => (
               <button
                 key={item.romaji}
                 onClick={() => toggleCharacter(item.romaji)}
@@ -291,7 +291,7 @@ export default function LessonDetailPage({ params }: { params: Promise<{ id: str
         <div className="bg-white rounded-xl p-6 mb-8 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Exemplos de Palavras</h2>
           <div className="space-y-4">
-            {lesson.content.examples.map((example: Lesson, index: number) => (
+            {lesson.content.examples.map((example: any, index: number) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-100"
