@@ -3,10 +3,36 @@
 import { useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, Volume2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle } from 'lucide-react'
+
+interface Character {
+  char: string
+  romaji: string
+  sound: string
+}
+
+interface Example {
+  word: string
+  romaji: string
+  meaning: string
+}
+
+interface LessonContent {
+  introduction: string
+  characters: Character[]
+  examples: Example[]
+}
+
+interface Lesson {
+  id: number
+  title: string
+  titlePt: string
+  description: string
+  content: LessonContent
+}
 
 // 模擬データ - 後でデータベースから取得
-const lessonData: Record<string, any> = {
+const lessonData: Record<string, Lesson> = {
   '1': {
     id: 1,
     title: 'Hiragana',
@@ -164,9 +190,10 @@ const lessonData: Record<string, any> = {
   },
 }
 
-export default function LessonDetailPage({ params }: { params: { id: string } }) {
+export default function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
-  const lesson = lessonData[params.id]
+  const { id } = use(params)
+  const lesson = lessonData[id]
   const [completedChars, setCompletedChars] = useState<Set<string>>(new Set())
 
   if (!lesson) {
@@ -239,7 +266,7 @@ export default function LessonDetailPage({ params }: { params: { id: string } })
         <div className="bg-white rounded-xl p-6 mb-8 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Caracteres</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {lesson.content.characters.map((item: any) => (
+            {lesson.content.characters.map((item: Character) => (
               <button
                 key={item.romaji}
                 onClick={() => toggleCharacter(item.romaji)}
@@ -264,7 +291,7 @@ export default function LessonDetailPage({ params }: { params: { id: string } })
         <div className="bg-white rounded-xl p-6 mb-8 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Exemplos de Palavras</h2>
           <div className="space-y-4">
-            {lesson.content.examples.map((example: any, index: number) => (
+            {lesson.content.examples.map((example: Example, index: number) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-100"
