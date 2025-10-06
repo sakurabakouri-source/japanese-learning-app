@@ -3,10 +3,36 @@
 import { useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, Volume2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle } from 'lucide-react'
+
+interface Character {
+  char: string
+  romaji: string
+  sound: string
+}
+
+interface Example {
+  word: string
+  romaji: string
+  meaning: string
+}
+
+interface LessonContent {
+  introduction: string
+  characters: Character[]
+  examples: Example[]
+}
+
+interface Lesson {
+  id: number
+  title: string
+  titlePt: string
+  description: string
+  content: LessonContent
+}
 
 // 模擬データ - 後でデータベースから取得
-const lessonData: Record<string, any> = {
+const lessonData: Record<string, Lesson> = {
   '1': {
     id: 1,
     title: 'Hiragana',
@@ -164,9 +190,10 @@ const lessonData: Record<string, any> = {
   },
 }
 
-export default function LessonDetailPage({ params }: { params: { id: string } }) {
+export default function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
-  const lesson = lessonData[params.id]
+  const { id } = use(params)
+  const lesson = lessonData[id]
   const [completedChars, setCompletedChars] = useState<Set<string>>(new Set())
 
   if (!lesson) {
